@@ -1,6 +1,6 @@
 package com.example.geografiaService.repository;
 
-import com.example.geografiaService.entity.Comuna;
+import com.example.geografiaService.model.Comuna;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

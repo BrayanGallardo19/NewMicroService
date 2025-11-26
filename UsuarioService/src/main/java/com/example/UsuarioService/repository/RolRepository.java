@@ -1,6 +1,6 @@
 package com.example.UsuarioService.repository;
 
-import com.example.UsuarioService.entity.Rol;
+import com.example.UsuarioService.model.Rol;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

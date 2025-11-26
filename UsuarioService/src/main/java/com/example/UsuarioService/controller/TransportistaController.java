@@ -1,7 +1,7 @@
 package com.example.UsuarioService.controller;
 
 import org.springframework.web.bind.annotation.*;
-import com.example.UsuarioService.entity.Transportista;
+import com.example.UsuarioService.model.Transportista;
 import com.example.UsuarioService.repository.TransportistaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,8 @@ public class TransportistaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Transportista> actualizar(@PathVariable Integer id, @RequestBody Transportista transportista) {
+    public ResponseEntity<Transportista> actualizar(@PathVariable Integer id,
+            @RequestBody Transportista transportista) {
         if (!transportistaRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

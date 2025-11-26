@@ -1,6 +1,6 @@
 package com.example.EntregasService.controller;
 
-import com.example.EntregasService.entity.Entrega;
+import com.example.EntregasService.model.Entrega;
 import com.example.EntregasService.service.EntregaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,12 +1,15 @@
 package com.example.geografiaService.controller;
 
-import com.example.geografiaService.entity.Comuna;
-import com.example.geografiaService.service.ComunaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.geografiaService.model.Comuna;
+import com.example.geografiaService.service.ComunaService;
 
 import java.util.List;
 
@@ -16,7 +19,8 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class ComunaController {
     
-    private final ComunaService comunaService;
+    @Autowired
+    private  ComunaService comunaService;
     
     @GetMapping
     public ResponseEntity<List<Comuna>> getAllComunas() {

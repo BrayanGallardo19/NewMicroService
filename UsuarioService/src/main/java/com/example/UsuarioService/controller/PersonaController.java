@@ -1,7 +1,7 @@
 package com.example.UsuarioService.controller;
 
 import org.springframework.web.bind.annotation.*;
-import com.example.UsuarioService.entity.Persona;
+import com.example.UsuarioService.model.Persona;
 import com.example.UsuarioService.repository.PersonaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

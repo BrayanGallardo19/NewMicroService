@@ -1,6 +1,6 @@
 package com.example.geografiaService.controller;
 
-import com.example.geografiaService.entity.Region;
+import com.example.geografiaService.model.Region;
 import com.example.geografiaService.service.RegionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

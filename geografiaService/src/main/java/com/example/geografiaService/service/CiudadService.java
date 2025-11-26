@@ -1,7 +1,7 @@
 package com.example.geografiaService.service;
 
-import com.example.geografiaService.entity.Ciudad;
-import com.example.geografiaService.entity.Comuna;
+import com.example.geografiaService.model.Ciudad;
+import com.example.geografiaService.model.Comuna;
 import com.example.geografiaService.repository.CiudadRepository;
 import com.example.geografiaService.repository.ComunaRepository;
 import lombok.RequiredArgsConstructor;

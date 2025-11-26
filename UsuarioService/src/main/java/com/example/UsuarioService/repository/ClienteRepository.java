@@ -1,6 +1,6 @@
 package com.example.UsuarioService.repository;
 
-import com.example.UsuarioService.entity.Cliente;
+import com.example.UsuarioService.model.Cliente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

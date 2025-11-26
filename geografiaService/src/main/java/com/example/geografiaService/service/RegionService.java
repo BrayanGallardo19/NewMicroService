@@ -1,6 +1,6 @@
 package com.example.geografiaService.service;
 
-import com.example.geografiaService.entity.Region;
+import com.example.geografiaService.model.Region;
 import com.example.geografiaService.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

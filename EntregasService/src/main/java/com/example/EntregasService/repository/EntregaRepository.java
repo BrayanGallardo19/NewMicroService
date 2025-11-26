@@ -1,6 +1,6 @@
 package com.example.EntregasService.repository;
 
-import com.example.EntregasService.entity.Entrega;
+import com.example.EntregasService.model.Entrega;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

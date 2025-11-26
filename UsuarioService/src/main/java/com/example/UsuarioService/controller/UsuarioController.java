@@ -1,7 +1,7 @@
 package com.example.UsuarioService.controller;
 
 import org.springframework.web.bind.annotation.*;
-import com.example.UsuarioService.entity.Usuario;
+import com.example.UsuarioService.model.Usuario;
 import com.example.UsuarioService.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +23,13 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> obtenerPorId(@PathVariable Integer id) {
         return usuarioRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<Usuario> buscarPorEmail(@RequestParam String email) {
+        return usuarioRepository.findByPersona_Email(email)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
