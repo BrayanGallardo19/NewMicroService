@@ -62,6 +62,12 @@ public class Persona {
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 
+    @Column(name = "genero", length = 20)
+    private String genero;
+
+    @Column(name = "fecha_nacimiento")
+    private java.time.LocalDate fechaNacimiento;
+
     @Column(name = "estado", length = 20, nullable = false)
     private String estado = "activo";
 }

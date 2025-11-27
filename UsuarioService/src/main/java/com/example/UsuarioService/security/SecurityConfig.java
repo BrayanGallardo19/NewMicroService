@@ -39,10 +39,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/personas").permitAll() // Registro
-                        .requestMatchers("/api/usuarios").permitAll() // Registro
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/personas").permitAll() // Registro
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/usuarios").permitAll() // Registro
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/contacto").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/contacto").hasRole("ADMIN")
 
                         // Endpoints protegidos por rol
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/usuarios/**")
+                        .hasAnyRole("ADMIN", "CLIENTE")
                         .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
                         .requestMatchers("/api/clientes/**").hasAnyRole("ADMIN", "VENDEDOR")
                         .requestMatchers("/api/transportistas/**").hasRole("ADMIN")

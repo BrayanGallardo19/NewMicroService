@@ -9,21 +9,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse {
-
-    private String token;
-    private String refreshToken;
-    private String type = "Bearer";
-    private Integer userId;
-    private String email;
-    private String nombre;
-    private String rol;
+public class RegisterRequest {
     private String run;
+    private String nombre;
+    private String apellido;
+    private String email;
     private String telefono;
     private String genero;
     private String fechaNacimiento;
     private String region;
-    private String comuna;
+    private String comuna; // Nombre de comuna como string
     private String direccion;
-    private String fechaRegistro;
+    private String password;
 }

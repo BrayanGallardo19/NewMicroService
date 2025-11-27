@@ -24,6 +24,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
+    private final com.example.UsuarioService.client.GeografiaClient geografiaClient;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -42,7 +43,25 @@ public class AuthController {
             final String token = jwtUtil.generateToken(userDetails, usuario.getIdPersona());
             final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
-            // Construir respuesta
+            // Obtener región y comuna desde GeografiaService
+            String regionNombre = null;
+            String comunaNombre = null;
+
+            if (usuario.getPersona().getIdComuna() != null) {
+                try {
+                    var comuna = geografiaClient.getComunaById(usuario.getPersona().getIdComuna());
+                    if (comuna != null) {
+                        comunaNombre = comuna.getNombreComuna();
+                        if (comuna.getRegion() != null) {
+                            regionNombre = comuna.getRegion().getNombreRegion();
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error al obtener datos de geografía: " + e.getMessage());
+                }
+            }
+
+            // Construir respuesta con todos los datos del usuario
             LoginResponse response = LoginResponse.builder()
                     .token(token)
                     .refreshToken(refreshToken)
@@ -50,6 +69,18 @@ public class AuthController {
                     .email(usuario.getPersona().getEmail())
                     .nombre(usuario.getPersona().getNombre() + " " + usuario.getPersona().getApellido())
                     .rol(usuario.getRol().getNombreRol())
+                    .run(usuario.getPersona().getRut())
+                    .telefono(usuario.getPersona().getTelefono())
+                    .genero(usuario.getPersona().getGenero())
+                    .fechaNacimiento(usuario.getPersona().getFechaNacimiento() != null
+                            ? usuario.getPersona().getFechaNacimiento().toString()
+                            : null)
+                    .region(regionNombre)
+                    .comuna(comunaNombre)
+                    .direccion(usuario.getPersona().getCalle())
+                    .fechaRegistro(usuario.getPersona().getFechaRegistro() != null
+                            ? usuario.getPersona().getFechaRegistro().toString()
+                            : null)
                     .build();
 
             return ResponseEntity.ok(response);
@@ -95,6 +126,73 @@ public class AuthController {
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al renovar token: " + e.getMessage());
+        }
+    }
+
+    private final com.example.UsuarioService.repository.PersonaRepository personaRepository;
+    private final com.example.UsuarioService.repository.UsuarioRepository usuarioRepository;
+    private final com.example.UsuarioService.repository.RolRepository rolRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
+    @PostMapping("/register")
+    @org.springframework.transaction.annotation.Transactional
+    public ResponseEntity<?> register(@Valid @RequestBody com.example.UsuarioService.dto.RegisterRequest request) {
+        try {
+            // Validar duplicados
+            if (personaRepository.findByEmail(request.getEmail()).isPresent()) {
+                return ResponseEntity.status(409).body("El email ya está registrado");
+            }
+            if (personaRepository.findByRut(request.getRun()).isPresent()) {
+                return ResponseEntity.status(409).body("El RUT ya está registrado");
+            }
+
+            // Crear Persona
+            com.example.UsuarioService.model.Persona persona = new com.example.UsuarioService.model.Persona();
+            persona.setRut(request.getRun());
+            persona.setNombre(request.getNombre());
+            persona.setApellido(request.getApellido());
+            persona.setEmail(request.getEmail());
+            persona.setTelefono(request.getTelefono());
+            persona.setCalle(request.getDireccion());
+            persona.setGenero(request.getGenero());
+
+            // Parsear fecha de nacimiento
+            if (request.getFechaNacimiento() != null && !request.getFechaNacimiento().isEmpty()) {
+                try {
+                    persona.setFechaNacimiento(java.time.LocalDate.parse(request.getFechaNacimiento()));
+                } catch (Exception e) {
+                    persona.setFechaNacimiento(null);
+                }
+            }
+
+            // Parsear comuna (debe venir como ID desde el frontend)
+            try {
+                persona.setIdComuna(Integer.parseInt(request.getComuna()));
+            } catch (NumberFormatException e) {
+                persona.setIdComuna(null);
+            }
+            persona.setUsername(request.getEmail().split("@")[0]);
+            persona.setPassHash(passwordEncoder.encode(request.getPassword()));
+            persona.setFechaRegistro(java.time.LocalDateTime.now());
+            persona.setEstado("activo");
+
+            persona = personaRepository.save(persona);
+
+            // Crear Usuario
+            Usuario usuario = new Usuario();
+            usuario.setPersona(persona);
+
+            // Asignar Rol Cliente (ID 2)
+            com.example.UsuarioService.model.Rol rol = rolRepository.findById(2)
+                    .orElseThrow(() -> new RuntimeException("Rol de cliente no encontrado"));
+            usuario.setRol(rol);
+
+            usuarioRepository.save(usuario);
+
+            return ResponseEntity.ok("Usuario registrado exitosamente");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error en el registro: " + e.getMessage());
         }
     }
 

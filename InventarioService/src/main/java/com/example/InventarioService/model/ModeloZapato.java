@@ -40,6 +40,13 @@ public class ModeloZapato {
     @Column(name = "imagen_url", length = 500)
     private String imagenUrl;
 
+    @Lob
+    @Column(name = "imagen", columnDefinition = "LONGBLOB")
+    private byte[] imagen;
+
     @Column(name = "estado", length = 20, nullable = false)
     private String estado = "activo";
+
+    @Column(name = "categoria", length = 50)
+    private String categoria;
 }

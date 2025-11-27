@@ -13,94 +13,159 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 @Slf4j
 public class LoadDatabase {
 
-    @Bean
-    CommandLineRunner initDatabase(
-            MarcaRepository marcaRepository,
-            TallaRepository tallaRepository,
-            ModeloZapatoRepository modeloRepository,
-            InventarioRepository inventarioRepository) {
-        return args -> {
-            // Verificar si ya hay datos
-            if (marcaRepository.count() > 0) {
-                log.info("Base de datos ya contiene datos. Omitiendo precarga.");
-                return;
-            }
+        @Bean
+        CommandLineRunner initDatabase(
+                        MarcaRepository marcaRepository,
+                        TallaRepository tallaRepository,
+                        ModeloZapatoRepository modeloRepository,
+                        InventarioRepository inventarioRepository) {
+                return args -> {
+                        log.info("Iniciando carga/actualización de datos de inventario...");
 
-            log.info("Iniciando precarga de datos de inventario...");
+                        // 1. Obtener o Crear Marcas
+                        Marca nike = marcaRepository.findByNombreMarca("Nike")
+                                        .orElseGet(() -> marcaRepository.save(new Marca(null, "Nike",
+                                                        "Marca deportiva líder mundial", "activo")));
+                        Marca adidas = marcaRepository.findByNombreMarca("Adidas")
+                                        .orElseGet(() -> marcaRepository.save(new Marca(null, "Adidas",
+                                                        "Marca deportiva alemana", "activo")));
+                        Marca puma = marcaRepository.findByNombreMarca("Puma")
+                                        .orElseGet(() -> marcaRepository.save(
+                                                        new Marca(null, "Puma", "Marca deportiva alemana", "activo")));
+                        Marca reebok = marcaRepository.findByNombreMarca("Reebok")
+                                        .orElseGet(() -> marcaRepository.save(new Marca(null, "Reebok",
+                                                        "Marca deportiva británica", "activo")));
 
-            // 1. Crear Marcas
-            Marca nike = marcaRepository.save(new Marca(null, "Nike", "Marca deportiva líder mundial", "activo"));
-            Marca adidas = marcaRepository.save(new Marca(null, "Adidas", "Marca deportiva alemana", "activo"));
-            Marca puma = marcaRepository.save(new Marca(null, "Puma", "Marca deportiva alemana", "activo"));
-            Marca reebok = marcaRepository.save(new Marca(null, "Reebok", "Marca deportiva británica", "activo"));
-            log.info("Marcas creadas: Nike, Adidas, Puma, Reebok");
+                        log.info("Marcas verificadas/creadas");
 
-            // 2. Crear Tallas
-            Talla[] tallas = new Talla[11];
-            for (int i = 35; i <= 45; i++) {
-                tallas[i - 35] = tallaRepository.save(new Talla(null, String.valueOf(i)));
-            }
-            log.info("Tallas creadas: 35 a 45");
+                        // 2. Crear Tallas si no existen
+                        if (tallaRepository.count() == 0) {
+                                for (int i = 35; i <= 45; i++) {
+                                        tallaRepository.save(new Talla(null, String.valueOf(i)));
+                                }
+                                log.info("Tallas creadas: 35 a 45");
+                        }
+                        List<Talla> tallas = tallaRepository.findAll();
 
-            // 3. Crear Modelos de Zapatos
-            ModeloZapato airMax = modeloRepository.save(new ModeloZapato(
-                    null, nike, "Air Max 90", "Zapatillas deportivas clásicas", 89990,
-                    "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/zwxes8uud05rkuei1mpt/air-max-90-zapatillas-SLz7VJ.png",
-                    "activo"));
+                        // 3. Crear o Actualizar Modelos de Zapatos
+                        createOrUpdateModel(modeloRepository, nike, "Air Max 90", "Zapatillas deportivas clásicas",
+                                        89990,
+                                        "air-max-90.png", "deportivos");
 
-            ModeloZapato ultraBoost = modeloRepository.save(new ModeloZapato(
-                    null, adidas, "Ultra Boost 22", "Zapatillas running premium", 129990,
-                    "https://assets.adidas.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/fbaf991a78bc4896a3e9ad7800abcec6_9366/Zapatillas_Ultraboost_22_Negro_GZ0127_01_standard.jpg",
-                    "activo"));
+                        createOrUpdateModel(modeloRepository, adidas, "Ultra Boost 22", "Zapatillas running premium",
+                                        129990,
+                                        "ultra-boost-22.jpg", "deportivos");
 
-            ModeloZapato suede = modeloRepository.save(new ModeloZapato(
-                    null, puma, "Suede Classic", "Zapatillas urbanas icónicas", 59990,
-                    "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_2000,h_2000/global/374915/25/sv01/fnd/PNA/fmt/png/Zapatillas-Suede-Classic-XXI",
-                    "activo"));
+                        createOrUpdateModel(modeloRepository, puma, "Suede Classic", "Zapatillas urbanas icónicas",
+                                        59990,
+                                        "suede-classic.png", "hombre");
 
-            ModeloZapato club = modeloRepository.save(new ModeloZapato(
-                    null, reebok, "Club C 85", "Zapatillas retro casual", 69990,
-                    "https://assets.reebok.com/images/h_840,f_auto,q_auto,fl_lossy,c_fill,g_auto/d9f3d4e0e2e54d5f8f3eaad6009a0a3a_9366/Zapatillas_Club_C_85_Vintage_Blanco_FX1378_01_standard.jpg",
-                    "activo"));
+                        createOrUpdateModel(modeloRepository, reebok, "Club C 85", "Zapatillas retro casual", 69990,
+                                        "club-c-85.jpg", "mujer");
 
-            ModeloZapato jordan = modeloRepository.save(new ModeloZapato(
-                    null, nike, "Air Jordan 1", "Zapatillas basketball icónicas", 149990,
-                    "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/b7d9211c-26e7-431a-ac24-b0540fb3c00f/air-jordan-1-mid-zapatillas-SrVlzO.png",
-                    "activo"));
+                        createOrUpdateModel(modeloRepository, nike, "Air Jordan 1", "Zapatillas basketball icónicas",
+                                        149990,
+                                        "air-jordan-1.png", "hombre");
 
-            log.info("Modelos creados: 5 modelos de diferentes marcas");
+                        // Nuevos productos
+                        createOrUpdateModel(modeloRepository, nike, "Botas de Cuero", "Botas resistentes y elegantes",
+                                        119990,
+                                        "botasdecuero.jpg", "hombre");
 
-            // 4. Crear Inventario (stock por talla)
-            int inventarioCreado = 0;
-            ModeloZapato[] modelos = { airMax, ultraBoost, suede, club, jordan };
+                        createOrUpdateModel(modeloRepository, adidas, "Sandalias de Verano", "Comodidad para el verano",
+                                        29990,
+                                        "sandaliasdeverano.jpg", "mujer");
 
-            for (ModeloZapato modelo : modelos) {
-                // Crear inventario para tallas 38-42 (más comunes)
-                for (int i = 38; i <= 42; i++) {
-                    Talla talla = tallas[i - 35];
-                    int stock = 10 + (int) (Math.random() * 20); // Stock aleatorio entre 10 y 30
+                        createOrUpdateModel(modeloRepository, puma, "Tacones Elegantes",
+                                        "Estilo para ocasiones especiales", 79990,
+                                        "taconeselegantes.jpg", "mujer");
 
-                    Inventario inv = new Inventario();
-                    inv.setModelo(modelo);
-                    inv.setTalla(talla);
-                    inv.setStockActual(stock);
-                    inventarioRepository.save(inv);
-                    inventarioCreado++;
+                        createOrUpdateModel(modeloRepository, reebok, "Zapatillas Casual", "Para el día a día", 49990,
+                                        "zapatillascasual.jpg", "hombre");
+
+                        createOrUpdateModel(modeloRepository, nike, "Zapatillas Deportivas", "Alto rendimiento", 99990,
+                                        "zapatillasdeportivas.jpg", "deportivos");
+
+                        createOrUpdateModel(modeloRepository, adidas, "Zapatos de Vestir", "Elegancia formal", 89990,
+                                        "zapatosdevestir.jpg", "hombre");
+
+                        createOrUpdateModel(modeloRepository, reebok, "Zapatos Escolares",
+                                        "Durabilidad para el colegio", 39990,
+                                        "zapatosescolares.jpg", "niños");
+
+                        createOrUpdateModel(modeloRepository, puma, "Oxford Clásicos", "Estilo atemporal", 69990,
+                                        "zapatosoxfordclasicos.jpg", "hombre");
+
+                        log.info("Modelos verificados/actualizados");
+
+                        // 4. Crear Inventario (stock por talla) para modelos que no tengan stock
+                        List<ModeloZapato> todosModelos = modeloRepository.findAll();
+                        for (ModeloZapato modelo : todosModelos) {
+                                if (!tallas.isEmpty() && inventarioRepository.findByModelo_IdModeloAndTalla_IdTalla(
+                                                modelo.getIdModelo(), tallas.get(0).getIdTalla()).isEmpty()) {
+                                        // Si no tiene inventario para la primera talla, asumimos que es nuevo y le
+                                        // creamos stock
+                                        for (int i = 0; i < 5 && i < tallas.size(); i++) { // Primeras 5 tallas
+                                                Talla talla = tallas.get(i);
+                                                Inventario inv = new Inventario();
+                                                inv.setModelo(modelo);
+                                                inv.setTalla(talla);
+                                                inv.setStockActual(10 + (int) (Math.random() * 20));
+                                                inventarioRepository.save(inv);
+                                        }
+                                }
+                        }
+
+                        log.info("Inventario verificado");
+                        log.info("=================================================");
+                };
+        }
+
+        private void createOrUpdateModel(ModeloZapatoRepository repository, Marca marca, String nombre,
+                        String descripcion, int precio, String imagenFile, String categoria) {
+                ModeloZapato modelo = repository.findByNombreModelo(nombre)
+                                .orElse(new ModeloZapato(null, marca, nombre, descripcion, precio, null, null, "activo",
+                                                categoria));
+
+                // Actualizar campos
+                modelo.setMarca(marca);
+                modelo.setDescripcion(descripcion);
+                modelo.setPrecioUnitario(precio);
+                modelo.setCategoria(categoria);
+
+                // Cargar imagen solo si es necesario (o forzar actualización)
+                byte[] imgData = loadImage(imagenFile);
+                if (imgData != null) {
+                        modelo.setImagen(imgData);
                 }
-            }
 
-            log.info("Inventario creado: {} entradas", inventarioCreado);
-            log.info("=================================================");
-            log.info("DATOS DE INVENTARIO PRECARGADOS:");
-            log.info("- 4 Marcas");
-            log.info("- 11 Tallas (35-45)");
-            log.info("- 5 Modelos de zapatos");
-            log.info("- {} Entradas de inventario", inventarioCreado);
-            log.info("=================================================");
-        };
-    }
+                // Guardar para generar ID si es nuevo
+                modelo = repository.save(modelo);
+
+                // Actualizar URL
+                updateImageUrl(repository, modelo);
+        }
+
+        private byte[] loadImage(String filename) {
+                try {
+                        org.springframework.core.io.Resource resource = new org.springframework.core.io.ClassPathResource(
+                                        "images/" + filename);
+                        return resource.getInputStream().readAllBytes();
+                } catch (Exception e) {
+                        log.error("Error cargando imagen {}: {}", filename, e.getMessage());
+                        return null;
+                }
+        }
+
+        private void updateImageUrl(ModeloZapatoRepository repository, ModeloZapato modelo) {
+                String url = "http://localhost:8082/api/modelos/" + modelo.getIdModelo() + "/imagen";
+                modelo.setImagenUrl(url);
+                repository.save(modelo);
+        }
 }

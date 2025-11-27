@@ -13,4 +13,6 @@ public interface ModeloZapatoRepository extends JpaRepository<ModeloZapato, Inte
     List<ModeloZapato> findByEstado(String estado);
 
     List<ModeloZapato> findByMarca_IdMarcaAndEstado(Integer idMarca, String estado);
+
+    java.util.Optional<ModeloZapato> findByNombreModelo(String nombreModelo);
 }
