@@ -18,7 +18,7 @@ public class Usuario {
     private Integer idPersona;
 
     @NotNull(message = "La persona es obligatoria")
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @MapsId
     @JoinColumn(name = "id_persona")
     private Persona persona;
