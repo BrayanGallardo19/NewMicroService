@@ -119,4 +119,27 @@ public class InventarioService {
 
         return updated;
     }
+
+    @Transactional
+    public Inventario updateInventario(Integer id, Inventario inventarioActualizado) {
+        Inventario inventario = getInventarioById(id);
+
+        if (inventarioActualizado.getModelo() != null) {
+            inventario.setModelo(inventarioActualizado.getModelo());
+        }
+        if (inventarioActualizado.getTalla() != null) {
+            inventario.setTalla(inventarioActualizado.getTalla());
+        }
+        if (inventarioActualizado.getStockActual() != null) {
+            inventario.setStockActual(inventarioActualizado.getStockActual());
+        }
+
+        return inventarioRepository.save(inventario);
+    }
+
+    @Transactional
+    public void deleteInventario(Integer id) {
+        Inventario inventario = getInventarioById(id);
+        inventarioRepository.delete(inventario);
+    }
 }

@@ -5,6 +5,7 @@ import com.example.UsuarioService.model.Persona;
 import com.example.UsuarioService.repository.PersonaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 
 @RestController
@@ -14,6 +15,9 @@ public class PersonaController {
 
     @Autowired
     private PersonaRepository personaRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public ResponseEntity<List<Persona>> obtenerTodas() {
@@ -29,6 +33,10 @@ public class PersonaController {
 
     @PostMapping
     public ResponseEntity<Persona> crear(@RequestBody Persona persona) {
+        // Hashear la contraseña antes de guardar
+        if (persona.getPassHash() != null && !persona.getPassHash().isEmpty()) {
+            persona.setPassHash(passwordEncoder.encode(persona.getPassHash()));
+        }
         Persona nuevaPersona = personaRepository.save(persona);
         return ResponseEntity.ok(nuevaPersona);
     }

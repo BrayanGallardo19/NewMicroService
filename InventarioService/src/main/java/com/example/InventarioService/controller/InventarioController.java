@@ -79,4 +79,17 @@ public class InventarioController {
         String motivo = (String) request.get("motivo");
         return ResponseEntity.ok(inventarioService.agregarStock(id, cantidad, usuarioResponsable, motivo));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Inventario> updateInventario(
+            @PathVariable Integer id,
+            @RequestBody Inventario inventario) {
+        return ResponseEntity.ok(inventarioService.updateInventario(id, inventario));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteInventario(@PathVariable Integer id) {
+        inventarioService.deleteInventario(id);
+        return ResponseEntity.noContent().build();
+    }
 }
