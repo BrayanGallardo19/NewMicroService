@@ -21,7 +21,7 @@ public class ClienteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> obtenerPorId(@PathVariable Integer id) {
+    public ResponseEntity<Cliente> obtenerPorId(@PathVariable("id") Integer id) {
         return clienteRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -34,7 +34,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> actualizar(@PathVariable Integer id, @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> actualizar(@PathVariable("id") Integer id, @RequestBody Cliente cliente) {
         if (!clienteRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -44,7 +44,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<Void> eliminar(@PathVariable("id") Integer id) {
         if (!clienteRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

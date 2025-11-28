@@ -26,12 +26,12 @@ public class CiudadController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ciudad> getCiudadById(@PathVariable Integer id) {
+    public ResponseEntity<Ciudad> getCiudadById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(ciudadService.getCiudadById(id));
     }
 
     @GetMapping("/comuna/{idComuna}")
-    public ResponseEntity<List<Ciudad>> getCiudadesByComuna(@PathVariable Integer idComuna) {
+    public ResponseEntity<List<Ciudad>> getCiudadesByComuna(@PathVariable("idComuna") Integer idComuna) {
         return ResponseEntity.ok(ciudadService.getCiudadesByComuna(idComuna));
     }
 
@@ -41,12 +41,12 @@ public class CiudadController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Ciudad> updateCiudad(@PathVariable Integer id, @Valid @RequestBody Ciudad ciudad) {
+    public ResponseEntity<Ciudad> updateCiudad(@PathVariable("id") Integer id, @Valid @RequestBody Ciudad ciudad) {
         return ResponseEntity.ok(ciudadService.updateCiudad(id, ciudad));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCiudad(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteCiudad(@PathVariable("id") Integer id) {
         ciudadService.deleteCiudad(id);
         return ResponseEntity.noContent().build();
     }

@@ -26,25 +26,23 @@ public class VentasController {
     }
 
     @GetMapping("/boletas/{id}")
-    public ResponseEntity<Boleta> getBoletaById(@PathVariable Integer id) {
+    public ResponseEntity<Boleta> getBoletaById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(ventasService.getBoletaById(id));
     }
 
     @GetMapping("/boletas/cliente/{idCliente}")
-    public ResponseEntity<List<Boleta>> getBoletasByCliente(@PathVariable Integer idCliente) {
-        System.out.println("Buscando boletas para cliente ID: " + idCliente);
+    public ResponseEntity<List<Boleta>> getBoletasByCliente(@PathVariable("idCliente") Integer idCliente) {
         List<Boleta> boletas = ventasService.getBoletasByCliente(idCliente);
-        System.out.println("Boletas encontradas: " + boletas.size());
         return ResponseEntity.ok(boletas);
     }
 
     @GetMapping("/boletas/vendedor/{idVendedor}")
-    public ResponseEntity<List<Boleta>> getBoletasByVendedor(@PathVariable Integer idVendedor) {
+    public ResponseEntity<List<Boleta>> getBoletasByVendedor(@PathVariable("idVendedor") Integer idVendedor) {
         return ResponseEntity.ok(ventasService.getBoletasByVendedor(idVendedor));
     }
 
     @GetMapping("/boletas/{id}/detalles")
-    public ResponseEntity<List<DetalleBoleta>> getDetallesByBoleta(@PathVariable Integer id) {
+    public ResponseEntity<List<DetalleBoleta>> getDetallesByBoleta(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(ventasService.getDetallesByBoleta(id));
     }
 
@@ -60,14 +58,14 @@ public class VentasController {
 
     @PutMapping("/boletas/{id}/estado")
     public ResponseEntity<Boleta> actualizarEstadoBoleta(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody Map<String, String> request) {
         String nuevoEstado = request.get("estado");
         return ResponseEntity.ok(ventasService.actualizarEstadoBoleta(id, nuevoEstado));
     }
 
     @DeleteMapping("/boletas/{id}")
-    public ResponseEntity<Void> deleteBoleta(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteBoleta(@PathVariable("id") Integer id) {
         ventasService.deleteBoleta(id);
         return ResponseEntity.noContent().build();
     }

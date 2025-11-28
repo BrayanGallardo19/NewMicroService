@@ -21,7 +21,7 @@ public class RolController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Rol> obtenerPorId(@PathVariable Integer id) {
+    public ResponseEntity<Rol> obtenerPorId(@PathVariable("id") Integer id) {
         return rolRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -34,7 +34,7 @@ public class RolController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Rol> actualizar(@PathVariable Integer id, @RequestBody Rol rol) {
+    public ResponseEntity<Rol> actualizar(@PathVariable("id") Integer id, @RequestBody Rol rol) {
         if (!rolRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -44,7 +44,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<Void> eliminar(@PathVariable("id") Integer id) {
         if (!rolRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

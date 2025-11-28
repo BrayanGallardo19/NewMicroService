@@ -23,7 +23,7 @@ public class TallaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Talla> getTallaById(@PathVariable Integer id) {
+    public ResponseEntity<Talla> getTallaById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(tallaService.getTallaById(id));
     }
 
@@ -33,12 +33,12 @@ public class TallaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Talla> updateTalla(@PathVariable Integer id, @RequestBody Talla talla) {
+    public ResponseEntity<Talla> updateTalla(@PathVariable("id") Integer id, @RequestBody Talla talla) {
         return ResponseEntity.ok(tallaService.updateTalla(id, talla));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTalla(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteTalla(@PathVariable("id") Integer id) {
         tallaService.deleteTalla(id);
         return ResponseEntity.noContent().build();
     }

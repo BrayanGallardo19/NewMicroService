@@ -15,7 +15,7 @@ public class ModeloZapatoController {
     private final ModeloZapatoRepository modeloRepository;
 
     @GetMapping("/{id}/imagen")
-    public ResponseEntity<?> getImagen(@PathVariable Integer id) {
+    public ResponseEntity<?> getImagen(@PathVariable("id") Integer id) {
         return modeloRepository.findById(id)
                 .map(modelo -> {
                     byte[] imagen = modelo.getImagen();

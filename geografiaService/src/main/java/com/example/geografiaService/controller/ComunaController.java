@@ -28,12 +28,12 @@ public class ComunaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comuna> getComunaById(@PathVariable Integer id) {
+    public ResponseEntity<Comuna> getComunaById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(comunaService.getComunaById(id));
     }
 
     @GetMapping("/region/{idRegion}")
-    public ResponseEntity<List<Comuna>> getComunasByRegion(@PathVariable Integer idRegion) {
+    public ResponseEntity<List<Comuna>> getComunasByRegion(@PathVariable("idRegion") Integer idRegion) {
         return ResponseEntity.ok(comunaService.getComunasByRegion(idRegion));
     }
 
@@ -43,12 +43,12 @@ public class ComunaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Comuna> updateComuna(@PathVariable Integer id, @Valid @RequestBody Comuna comuna) {
+    public ResponseEntity<Comuna> updateComuna(@PathVariable("id") Integer id, @Valid @RequestBody Comuna comuna) {
         return ResponseEntity.ok(comunaService.updateComuna(id, comuna));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComuna(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteComuna(@PathVariable("id") Integer id) {
         comunaService.deleteComuna(id);
         return ResponseEntity.noContent().build();
     }

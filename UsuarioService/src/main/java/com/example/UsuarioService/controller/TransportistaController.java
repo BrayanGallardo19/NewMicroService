@@ -21,7 +21,7 @@ public class TransportistaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Transportista> obtenerPorId(@PathVariable Integer id) {
+    public ResponseEntity<Transportista> obtenerPorId(@PathVariable("id") Integer id) {
         return transportistaRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -34,7 +34,7 @@ public class TransportistaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Transportista> actualizar(@PathVariable Integer id,
+    public ResponseEntity<Transportista> actualizar(@PathVariable("id") Integer id,
             @RequestBody Transportista transportista) {
         if (!transportistaRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -45,7 +45,7 @@ public class TransportistaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<Void> eliminar(@PathVariable("id") Integer id) {
         if (!transportistaRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

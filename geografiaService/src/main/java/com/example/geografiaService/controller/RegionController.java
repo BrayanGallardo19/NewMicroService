@@ -24,7 +24,7 @@ public class RegionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Region> getRegionById(@PathVariable Integer id) {
+    public ResponseEntity<Region> getRegionById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(regionService.getRegionById(id));
     }
 
@@ -34,12 +34,12 @@ public class RegionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Region> updateRegion(@PathVariable Integer id, @Valid @RequestBody Region region) {
+    public ResponseEntity<Region> updateRegion(@PathVariable("id") Integer id, @Valid @RequestBody Region region) {
         return ResponseEntity.ok(regionService.updateRegion(id, region));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRegion(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteRegion(@PathVariable("id") Integer id) {
         regionService.deleteRegion(id);
         return ResponseEntity.noContent().build();
     }

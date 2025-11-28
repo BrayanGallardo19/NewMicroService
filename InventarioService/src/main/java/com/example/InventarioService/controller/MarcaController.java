@@ -23,7 +23,7 @@ public class MarcaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Marca> getMarcaById(@PathVariable Integer id) {
+    public ResponseEntity<Marca> getMarcaById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(marcaService.getMarcaById(id));
     }
 
@@ -33,12 +33,12 @@ public class MarcaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Marca> updateMarca(@PathVariable Integer id, @RequestBody Marca marca) {
+    public ResponseEntity<Marca> updateMarca(@PathVariable("id") Integer id, @RequestBody Marca marca) {
         return ResponseEntity.ok(marcaService.updateMarca(id, marca));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMarca(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteMarca(@PathVariable("id") Integer id) {
         marcaService.deleteMarca(id);
         return ResponseEntity.noContent().build();
     }

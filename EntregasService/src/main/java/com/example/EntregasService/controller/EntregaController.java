@@ -25,22 +25,23 @@ public class EntregaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Entrega> getEntregaById(@PathVariable Integer id) {
+    public ResponseEntity<Entrega> getEntregaById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(entregaService.getEntregaById(id));
     }
 
     @GetMapping("/boleta/{idBoleta}")
-    public ResponseEntity<Entrega> getEntregaByBoleta(@PathVariable Integer idBoleta) {
+    public ResponseEntity<Entrega> getEntregaByBoleta(@PathVariable("idBoleta") Integer idBoleta) {
         return ResponseEntity.ok(entregaService.getEntregaByBoleta(idBoleta));
     }
 
     @GetMapping("/transportista/{idTransportista}")
-    public ResponseEntity<List<Entrega>> getEntregasByTransportista(@PathVariable Integer idTransportista) {
+    public ResponseEntity<List<Entrega>> getEntregasByTransportista(
+            @PathVariable("idTransportista") Integer idTransportista) {
         return ResponseEntity.ok(entregaService.getEntregasByTransportista(idTransportista));
     }
 
     @GetMapping("/estado/{estado}")
-    public ResponseEntity<List<Entrega>> getEntregasByEstado(@PathVariable String estado) {
+    public ResponseEntity<List<Entrega>> getEntregasByEstado(@PathVariable("estado") String estado) {
         return ResponseEntity.ok(entregaService.getEntregasByEstado(estado));
     }
 
@@ -51,7 +52,7 @@ public class EntregaController {
 
     @PutMapping("/{id}/asignar")
     public ResponseEntity<Entrega> asignarTransportista(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody Map<String, Integer> request) {
         Integer idTransportista = request.get("idTransportista");
         return ResponseEntity.ok(entregaService.asignarTransportista(id, idTransportista));
@@ -59,7 +60,7 @@ public class EntregaController {
 
     @PutMapping("/{id}/estado")
     public ResponseEntity<Entrega> actualizarEstado(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody Map<String, String> request) {
         String nuevoEstado = request.get("estado");
         String observacion = request.get("observacion");

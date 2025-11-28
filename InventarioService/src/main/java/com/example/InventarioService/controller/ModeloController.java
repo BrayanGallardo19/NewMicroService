@@ -23,17 +23,17 @@ public class ModeloController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ModeloZapato> getModeloById(@PathVariable Integer id) {
+    public ResponseEntity<ModeloZapato> getModeloById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(modeloService.getModeloById(id));
     }
 
     @GetMapping("/marca/{idMarca}")
-    public ResponseEntity<List<ModeloZapato>> getModelosByMarca(@PathVariable Integer idMarca) {
+    public ResponseEntity<List<ModeloZapato>> getModelosByMarca(@PathVariable("idMarca") Integer idMarca) {
         return ResponseEntity.ok(modeloService.getModelosByMarca(idMarca));
     }
 
     @GetMapping("/estado/{estado}")
-    public ResponseEntity<List<ModeloZapato>> getModelosByEstado(@PathVariable String estado) {
+    public ResponseEntity<List<ModeloZapato>> getModelosByEstado(@PathVariable("estado") String estado) {
         return ResponseEntity.ok(modeloService.getModelosByEstado(estado));
     }
 
@@ -44,13 +44,13 @@ public class ModeloController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ModeloZapato> updateModelo(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody ModeloZapato modelo) {
         return ResponseEntity.ok(modeloService.updateModelo(id, modelo));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteModelo(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteModelo(@PathVariable("id") Integer id) {
         modeloService.deleteModelo(id);
         return ResponseEntity.noContent().build();
     }

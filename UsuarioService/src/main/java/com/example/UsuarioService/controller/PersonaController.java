@@ -25,7 +25,7 @@ public class PersonaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Persona> obtenerPorId(@PathVariable Integer id) {
+    public ResponseEntity<Persona> obtenerPorId(@PathVariable("id") Integer id) {
         return personaRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -42,7 +42,7 @@ public class PersonaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Persona> actualizar(@PathVariable Integer id, @RequestBody Persona persona) {
+    public ResponseEntity<Persona> actualizar(@PathVariable("id") Integer id, @RequestBody Persona persona) {
         if (!personaRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -52,7 +52,7 @@ public class PersonaController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<Void> eliminar(@PathVariable("id") Integer id) {
         if (!personaRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

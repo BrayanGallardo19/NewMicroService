@@ -24,14 +24,14 @@ public class InventarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Inventario> getInventarioById(@PathVariable Integer id) {
+    public ResponseEntity<Inventario> getInventarioById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(inventarioService.getInventarioById(id));
     }
 
     @GetMapping("/modelo/{idModelo}/talla/{idTalla}")
     public ResponseEntity<Inventario> getByModeloAndTalla(
-            @PathVariable Integer idModelo,
-            @PathVariable Integer idTalla) {
+            @PathVariable("idModelo") Integer idModelo,
+            @PathVariable("idTalla") Integer idTalla) {
         return ResponseEntity.ok(inventarioService.getInventarioByModeloAndTalla(idModelo, idTalla));
     }
 
@@ -52,7 +52,7 @@ public class InventarioController {
 
     @PostMapping("/{id}/reservar")
     public ResponseEntity<Inventario> reservarStock(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody Map<String, Object> request) {
         Integer cantidad = (Integer) request.get("cantidad");
         Integer usuarioResponsable = (Integer) request.get("usuarioResponsable");
@@ -62,7 +62,7 @@ public class InventarioController {
 
     @PostMapping("/{id}/liberar")
     public ResponseEntity<Inventario> liberarStock(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody Map<String, Object> request) {
         Integer cantidad = (Integer) request.get("cantidad");
         Integer usuarioResponsable = (Integer) request.get("usuarioResponsable");
@@ -72,7 +72,7 @@ public class InventarioController {
 
     @PostMapping("/{id}/agregar")
     public ResponseEntity<Inventario> agregarStock(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody Map<String, Object> request) {
         Integer cantidad = (Integer) request.get("cantidad");
         Integer usuarioResponsable = (Integer) request.get("usuarioResponsable");
@@ -82,13 +82,13 @@ public class InventarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Inventario> updateInventario(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @RequestBody Inventario inventario) {
         return ResponseEntity.ok(inventarioService.updateInventario(id, inventario));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInventario(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteInventario(@PathVariable("id") Integer id) {
         inventarioService.deleteInventario(id);
         return ResponseEntity.noContent().build();
     }
