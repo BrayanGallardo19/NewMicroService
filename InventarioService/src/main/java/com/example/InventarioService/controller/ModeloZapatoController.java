@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/modelos")
+@RequestMapping("/api/v1/modelos")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class ModeloZapatoController {

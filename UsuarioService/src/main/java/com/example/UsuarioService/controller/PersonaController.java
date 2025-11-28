@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/personas")
+@RequestMapping("/api/v1/personas")
 @CrossOrigin(origins = "*")
 public class PersonaController {
 

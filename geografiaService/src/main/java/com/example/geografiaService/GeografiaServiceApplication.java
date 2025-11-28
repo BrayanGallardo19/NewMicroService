@@ -10,4 +10,12 @@ public class GeografiaServiceApplication {
 		SpringApplication.run(GeografiaServiceApplication.class, args);
 	}
 
+	@org.springframework.context.annotation.Bean
+	public org.springframework.boot.CommandLineRunner printSwaggerUrl() {
+		return args -> {
+			System.out.println("=================================================");
+			System.out.println("Swagger UI: http://localhost:8083/swagger-ui.html");
+			System.out.println("=================================================");
+		};
+	}
 }

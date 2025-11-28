@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/modelos")
+@RequestMapping("/api/v1/modelos")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class ModeloController {

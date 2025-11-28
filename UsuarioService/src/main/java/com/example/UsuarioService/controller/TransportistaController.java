@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/transportistas")
+@RequestMapping("/api/v1/transportistas")
 @CrossOrigin(origins = "*")
 public class TransportistaController {
 

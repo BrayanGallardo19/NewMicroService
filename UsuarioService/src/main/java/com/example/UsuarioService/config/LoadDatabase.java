@@ -48,65 +48,68 @@ public class LoadDatabase {
                 Rol rolTransportista = rolRepository.save(new Rol(null, "TRANSPORTISTA", "Transportista de entregas"));
                 log.info("Roles creados: ADMIN, CLIENTE, VENDEDOR, TRANSPORTISTA");
 
-                // 2. Crear Personas con contraseñas hasheadas
-                String passwordHash = passwordEncoder.encode("password123");
+                // 2. Crear Personas con contraseñas específicas
 
+                // Admin
                 Persona personaAdmin = new Persona();
                 personaAdmin.setNombre("Admin");
                 personaAdmin.setApellido("Sistema");
                 personaAdmin.setRut("11111111-1");
                 personaAdmin.setTelefono("912345678");
-                personaAdmin.setEmail("admin@zapateria.com");
+                personaAdmin.setEmail("admin@stepstyle.cl");
                 personaAdmin.setIdComuna(1);
                 personaAdmin.setCalle("Calle Admin");
                 personaAdmin.setNumeroPuerta("100");
                 personaAdmin.setUsername("admin");
-                personaAdmin.setPassHash(passwordHash);
+                personaAdmin.setPassHash(passwordEncoder.encode("admin123"));
                 personaAdmin.setFechaRegistro(LocalDateTime.now());
                 personaAdmin.setEstado("activo");
                 personaAdmin = personaRepository.save(personaAdmin);
 
+                // Cliente
                 Persona personaCliente = new Persona();
-                personaCliente.setNombre("Juan");
-                personaCliente.setApellido("Pérez");
+                personaCliente.setNombre("Cliente");
+                personaCliente.setApellido("Prueba");
                 personaCliente.setRut("22222222-2");
                 personaCliente.setTelefono("987654321");
-                personaCliente.setEmail("juan@cliente.com");
+                personaCliente.setEmail("cliente@stepstyle.cl");
                 personaCliente.setIdComuna(1);
                 personaCliente.setCalle("Calle Cliente");
                 personaCliente.setNumeroPuerta("200");
-                personaCliente.setUsername("juan");
-                personaCliente.setPassHash(passwordHash);
+                personaCliente.setUsername("cliente");
+                personaCliente.setPassHash(passwordEncoder.encode("cliente123"));
                 personaCliente.setFechaRegistro(LocalDateTime.now());
                 personaCliente.setEstado("activo");
                 personaCliente = personaRepository.save(personaCliente);
 
+                // Vendedor
                 Persona personaVendedor = new Persona();
-                personaVendedor.setNombre("María");
-                personaVendedor.setApellido("González");
+                personaVendedor.setNombre("Vendedor");
+                personaVendedor.setApellido("Prueba");
                 personaVendedor.setRut("33333333-3");
                 personaVendedor.setTelefono("956781234");
-                personaVendedor.setEmail("maria@vendedor.com");
+                personaVendedor.setEmail("vendedor@stepstyle.cl");
                 personaVendedor.setIdComuna(1);
                 personaVendedor.setCalle("Calle Vendedor");
                 personaVendedor.setNumeroPuerta("300");
-                personaVendedor.setUsername("maria");
-                personaVendedor.setPassHash(passwordHash);
+                personaVendedor.setUsername("vendedor");
+                personaVendedor.setPassHash(passwordEncoder.encode("vendedor123"));
                 personaVendedor.setFechaRegistro(LocalDateTime.now());
                 personaVendedor.setEstado("activo");
                 personaVendedor = personaRepository.save(personaVendedor);
 
+                // Transportista
                 Persona personaTransportista = new Persona();
-                personaTransportista.setNombre("Pedro");
-                personaTransportista.setApellido("Ramírez");
+                personaTransportista.setNombre("Transportista");
+                personaTransportista.setApellido("Prueba");
                 personaTransportista.setRut("44444444-4");
                 personaTransportista.setTelefono("945678123");
-                personaTransportista.setEmail("pedro@transportista.com");
+                personaTransportista.setEmail("transportista@stepstyle.cl");
                 personaTransportista.setIdComuna(1);
                 personaTransportista.setCalle("Calle Transportista");
                 personaTransportista.setNumeroPuerta("400");
-                personaTransportista.setUsername("pedro");
-                personaTransportista.setPassHash(passwordHash);
+                personaTransportista.setUsername("transportista");
+                personaTransportista.setPassHash(passwordEncoder.encode("transportista123"));
                 personaTransportista.setFechaRegistro(LocalDateTime.now());
                 personaTransportista.setEstado("activo");
                 personaTransportista = personaRepository.save(personaTransportista);
@@ -136,11 +139,11 @@ public class LoadDatabase {
 
                 log.info("Usuarios creados y vinculados con roles");
                 log.info("=================================================");
-                log.info("USUARIOS DE PRUEBA (contraseña: password123):");
-                log.info("Admin: admin@zapateria.com");
-                log.info("Cliente: juan@cliente.com");
-                log.info("Vendedor: maria@vendedor.com");
-                log.info("Transportista: pedro@transportista.com");
+                log.info("USUARIOS DE PRUEBA:");
+                log.info("Admin: admin@stepstyle.cl / admin123");
+                log.info("Cliente: cliente@stepstyle.cl / cliente123");
+                log.info("Vendedor: vendedor@stepstyle.cl / vendedor123");
+                log.info("Transportista: transportista@stepstyle.cl / transportista123");
                 log.info("=================================================");
                 return null;
             });

@@ -3,7 +3,7 @@ package com.example.VentasService.controller;
 import com.example.VentasService.model.Boleta;
 import com.example.VentasService.model.DetalleBoleta;
 import com.example.VentasService.service.VentasService;
-import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/ventas")
+@RequestMapping("/api/v1/ventas")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class VentasController {
@@ -32,7 +32,10 @@ public class VentasController {
 
     @GetMapping("/boletas/cliente/{idCliente}")
     public ResponseEntity<List<Boleta>> getBoletasByCliente(@PathVariable Integer idCliente) {
-        return ResponseEntity.ok(ventasService.getBoletasByCliente(idCliente));
+        System.out.println("Buscando boletas para cliente ID: " + idCliente);
+        List<Boleta> boletas = ventasService.getBoletasByCliente(idCliente);
+        System.out.println("Boletas encontradas: " + boletas.size());
+        return ResponseEntity.ok(boletas);
     }
 
     @GetMapping("/boletas/vendedor/{idVendedor}")
@@ -46,12 +49,12 @@ public class VentasController {
     }
 
     @PostMapping("/boletas")
-    public ResponseEntity<Boleta> createBoleta(@Valid @RequestBody Boleta boleta) {
+    public ResponseEntity<Boleta> createBoleta(@RequestBody Boleta boleta) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ventasService.createBoleta(boleta));
     }
 
     @PostMapping("/detalles")
-    public ResponseEntity<DetalleBoleta> addDetalleBoleta(@Valid @RequestBody DetalleBoleta detalle) {
+    public ResponseEntity<DetalleBoleta> addDetalleBoleta(@RequestBody DetalleBoleta detalle) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ventasService.addDetalleBoleta(detalle));
     }
 

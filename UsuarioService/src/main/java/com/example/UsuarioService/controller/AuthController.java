@@ -3,7 +3,11 @@ package com.example.UsuarioService.controller;
 import com.example.UsuarioService.dto.LoginRequest;
 import com.example.UsuarioService.dto.LoginResponse;
 import com.example.UsuarioService.dto.RefreshTokenRequest;
+import com.example.UsuarioService.dto.RegisterRequest;
 import com.example.UsuarioService.model.Usuario;
+import com.example.UsuarioService.repository.PersonaRepository;
+import com.example.UsuarioService.repository.RolRepository;
+import com.example.UsuarioService.repository.UsuarioRepository;
 import com.example.UsuarioService.security.CustomUserDetailsService;
 import com.example.UsuarioService.security.JwtUtil;
 import jakarta.validation.Valid;
@@ -13,10 +17,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class AuthController {
@@ -129,14 +134,14 @@ public class AuthController {
         }
     }
 
-    private final com.example.UsuarioService.repository.PersonaRepository personaRepository;
-    private final com.example.UsuarioService.repository.UsuarioRepository usuarioRepository;
-    private final com.example.UsuarioService.repository.RolRepository rolRepository;
-    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+    private final PersonaRepository personaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     @org.springframework.transaction.annotation.Transactional
-    public ResponseEntity<?> register(@Valid @RequestBody com.example.UsuarioService.dto.RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
             // Validar duplicados
             if (personaRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -198,8 +203,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
-        // En una implementación con lista negra de tokens, aquí se invalidaría el token
-        // Por ahora, el logout se maneja en el frontend eliminando el token
+
         return ResponseEntity.ok("Logout exitoso");
     }
 }

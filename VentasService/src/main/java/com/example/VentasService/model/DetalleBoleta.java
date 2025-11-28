@@ -22,6 +22,7 @@ public class DetalleBoleta {
     @NotNull(message = "La boleta es obligatoria")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_boleta", nullable = false)
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
     private Boleta boleta;
 
     @NotNull(message = "El ID del inventario es obligatorio")

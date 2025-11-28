@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/inventario")
+@RequestMapping("/api/v1/inventario")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class InventarioController {
