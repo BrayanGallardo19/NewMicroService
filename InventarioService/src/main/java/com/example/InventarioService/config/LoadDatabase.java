@@ -164,7 +164,7 @@ public class LoadDatabase {
         }
 
         private void updateImageUrl(ModeloZapatoRepository repository, ModeloZapato modelo) {
-                String url = "http://localhost:8082/api/modelos/" + modelo.getIdModelo() + "/imagen";
+                String url = "http://localhost:8082/api/v1/modelos/" + modelo.getIdModelo() + "/imagen";
                 modelo.setImagenUrl(url);
                 repository.save(modelo);
         }

@@ -1,5 +1,6 @@
 package com.example.VentasService.service;
 
+import com.example.VentasService.dto.DetalleBoletaRequest;
 import com.example.VentasService.model.Boleta;
 import com.example.VentasService.model.DetalleBoleta;
 import com.example.VentasService.repository.BoletaRepository;
@@ -65,39 +66,59 @@ public class VentasService {
     }
 
     @Transactional
-    public DetalleBoleta addDetalleBoleta(DetalleBoleta detalle) {
+    public DetalleBoleta addDetalleBoleta(DetalleBoletaRequest request) {
+        // Validar y extraer IDs del request
+        if (request.getBoleta() == null || request.getBoleta().getIdBoleta() == null) {
+            throw new IllegalArgumentException("El detalle debe tener una boleta asociada");
+        }
+        if (request.getInventario() == null || request.getInventario().getIdInventario() == null) {
+            throw new IllegalArgumentException("El detalle debe tener un inventario asociado");
+        }
+        
+        Integer idBoleta = request.getBoleta().getIdBoleta();
+        Integer idInventario = request.getInventario().getIdInventario();
+        
+        // Cargar la boleta completamente
+        Boleta boleta = getBoletaById(idBoleta);
+        
+        // Crear el detalle
+        DetalleBoleta detalle = new DetalleBoleta();
+        detalle.setBoleta(boleta);
+        detalle.setIdInventario(idInventario);
+        detalle.setCantidad(request.getCantidad());
+        detalle.setPrecioUnitario(request.getPrecioUnitario());
+        
         // Calcular subtotal si no viene
-        if (detalle.getSubtotal() == null) {
-            Integer cantidad = detalle.getCantidad();
-            Integer precio = detalle.getPrecioUnitario();
+        if (request.getSubtotal() == null) {
+            Integer cantidad = request.getCantidad();
+            Integer precio = request.getPrecioUnitario();
             if (cantidad != null && precio != null) {
                 detalle.setSubtotal(cantidad * precio);
             } else {
                 detalle.setSubtotal(0);
             }
+        } else {
+            detalle.setSubtotal(request.getSubtotal());
         }
 
         // Reservar stock en InventarioService
-        if (detalle.getIdInventario() != null && detalle.getCantidad() != null) {
-            inventarioClient.reservarStock(detalle.getIdInventario(), detalle.getCantidad());
+        if (idInventario != null && request.getCantidad() != null) {
+            inventarioClient.reservarStock(idInventario, request.getCantidad());
         }
 
         // Guardar detalle
         DetalleBoleta detalleGuardado = detalleBoletaRepository.save(detalle);
 
         // Actualizar total de la boleta
-        Boleta boleta = detalle.getBoleta();
-        if (boleta != null) {
-            Integer currentTotal = boleta.getMontoTotal();
-            Integer subtotal = detalleGuardado.getSubtotal();
-            if (currentTotal == null)
-                currentTotal = 0;
-            if (subtotal == null)
-                subtotal = 0;
+        Integer currentTotal = boleta.getMontoTotal();
+        Integer subtotal = detalleGuardado.getSubtotal();
+        if (currentTotal == null)
+            currentTotal = 0;
+        if (subtotal == null)
+            subtotal = 0;
 
-            boleta.setMontoTotal(currentTotal + subtotal);
-            boletaRepository.save(boleta);
-        }
+        boleta.setMontoTotal(currentTotal + subtotal);
+        boletaRepository.save(boleta);
 
         return detalleGuardado;
     }

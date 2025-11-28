@@ -38,20 +38,20 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/personas").permitAll() // Registro
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/usuarios").permitAll() // Registro
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/personas").permitAll() // Registro
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/usuarios").permitAll() // Registro
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/contacto").permitAll()
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/contacto").hasRole("ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/v1/contacto").permitAll()
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/contacto").hasRole("ADMIN")
 
                         // Endpoints protegidos por rol
-                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/usuarios/**")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/v1/usuarios/**")
                         .hasAnyRole("ADMIN", "CLIENTE")
-                        .requestMatchers("/api/usuarios/**").hasRole("ADMIN")
-                        .requestMatchers("/api/clientes/**").hasAnyRole("ADMIN", "VENDEDOR")
-                        .requestMatchers("/api/transportistas/**").hasRole("ADMIN")
-                        .requestMatchers("/api/roles/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/usuarios/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/clientes/**").hasAnyRole("ADMIN", "VENDEDOR")
+                        .requestMatchers("/api/v1/transportistas/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/roles/**").hasRole("ADMIN")
 
                         // Cualquier otra petición requiere autenticación
                         .anyRequest().authenticated())
@@ -84,10 +84,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // En producción, especificar orígenes permitidos
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOriginPatterns(List.of("*")); // Permite todos los orígenes con credenciales
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("*"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

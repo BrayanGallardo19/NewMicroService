@@ -2,14 +2,18 @@ package com.example.UsuarioService.controller;
 
 import com.example.UsuarioService.dto.LoginRequest;
 import com.example.UsuarioService.dto.LoginResponse;
+import com.example.UsuarioService.dto.LogoutRequest;
 import com.example.UsuarioService.dto.RefreshTokenRequest;
 import com.example.UsuarioService.dto.RegisterRequest;
+import com.example.UsuarioService.exception.TokenRefreshException;
+import com.example.UsuarioService.model.RefreshToken;
 import com.example.UsuarioService.model.Usuario;
 import com.example.UsuarioService.repository.PersonaRepository;
 import com.example.UsuarioService.repository.RolRepository;
 import com.example.UsuarioService.repository.UsuarioRepository;
 import com.example.UsuarioService.security.CustomUserDetailsService;
 import com.example.UsuarioService.security.JwtUtil;
+import com.example.UsuarioService.service.RefreshTokenService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +34,7 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
     private final com.example.UsuarioService.client.GeografiaClient geografiaClient;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -46,7 +51,7 @@ public class AuthController {
 
             // Generar tokens
             final String token = jwtUtil.generateToken(userDetails, usuario.getIdPersona());
-            final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
+            final RefreshToken refreshToken = refreshTokenService.createRefreshToken(usuario.getIdPersona());
 
             // Obtener región y comuna desde GeografiaService
             String regionNombre = null;
@@ -69,7 +74,7 @@ public class AuthController {
             // Construir respuesta con todos los datos del usuario
             LoginResponse response = LoginResponse.builder()
                     .token(token)
-                    .refreshToken(refreshToken)
+                    .refreshToken(refreshToken.getToken())
                     .userId(usuario.getIdPersona())
                     .email(usuario.getPersona().getEmail())
                     .nombre(usuario.getPersona().getNombre() + " " + usuario.getPersona().getApellido())
@@ -99,39 +104,29 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@Valid @RequestBody RefreshTokenRequest request) {
-        try {
-            String refreshToken = request.getRefreshToken();
+        String requestRefreshToken = request.getRefreshToken();
 
-            // Validar refresh token
-            if (!jwtUtil.validateToken(refreshToken)) {
-                return ResponseEntity.status(401).body("Refresh token inválido o expirado");
-            }
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(user.getPersona().getEmail());
+                    String token = jwtUtil.generateToken(userDetails, user.getIdPersona());
 
-            // Extraer username del refresh token
-            String username = jwtUtil.extractUsername(refreshToken);
+                    // Rotación de token: eliminar el antiguo y crear uno nuevo
+                    refreshTokenService.deleteByUserId(user.getIdPersona());
+                    RefreshToken newRefreshToken = refreshTokenService.createRefreshToken(user.getIdPersona());
 
-            // Cargar usuario
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            final Usuario usuario = userDetailsService.getUsuarioByEmail(username);
-
-            // Generar nuevo token de acceso
-            final String newToken = jwtUtil.generateToken(userDetails, usuario.getIdPersona());
-
-            // Construir respuesta
-            LoginResponse response = LoginResponse.builder()
-                    .token(newToken)
-                    .refreshToken(refreshToken) // Mantener el mismo refresh token
-                    .userId(usuario.getIdPersona())
-                    .email(usuario.getPersona().getEmail())
-                    .nombre(usuario.getPersona().getNombre() + " " + usuario.getPersona().getApellido())
-                    .rol(usuario.getRol().getNombreRol())
-                    .build();
-
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al renovar token: " + e.getMessage());
-        }
+                    return ResponseEntity.ok(LoginResponse.builder()
+                            .token(token)
+                            .refreshToken(newRefreshToken.getToken())
+                            .userId(user.getIdPersona())
+                            .email(user.getPersona().getEmail())
+                            .nombre(user.getPersona().getNombre() + " " + user.getPersona().getApellido())
+                            .rol(user.getRol().getNombreRol())
+                            .build());
+                })
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken, "Refresh token no está en la base de datos."));
     }
 
     private final PersonaRepository personaRepository;
@@ -202,8 +197,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
-
-        return ResponseEntity.ok("Logout exitoso");
+    public ResponseEntity<?> logoutUser(@Valid @RequestBody LogoutRequest logoutRequest) {
+        refreshTokenService.deleteByToken(logoutRequest.getRefreshToken());
+        return ResponseEntity.ok("Logout exitoso.");
     }
 }

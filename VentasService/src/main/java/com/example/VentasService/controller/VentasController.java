@@ -1,5 +1,6 @@
 package com.example.VentasService.controller;
 
+import com.example.VentasService.dto.DetalleBoletaRequest;
 import com.example.VentasService.model.Boleta;
 import com.example.VentasService.model.DetalleBoleta;
 import com.example.VentasService.service.VentasService;
@@ -52,8 +53,8 @@ public class VentasController {
     }
 
     @PostMapping("/detalles")
-    public ResponseEntity<DetalleBoleta> addDetalleBoleta(@RequestBody DetalleBoleta detalle) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ventasService.addDetalleBoleta(detalle));
+    public ResponseEntity<DetalleBoleta> addDetalleBoleta(@RequestBody DetalleBoletaRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ventasService.addDetalleBoleta(request));
     }
 
     @PutMapping("/boletas/{id}/estado")
