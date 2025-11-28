@@ -9,7 +9,9 @@ import com.example.UsuarioService.repository.PersonaRepository;
 import com.example.UsuarioService.repository.RolRepository;
 import com.example.UsuarioService.repository.UsuarioRepository;
 import com.example.UsuarioService.security.CustomUserDetailsService;
+import com.example.UsuarioService.security.JwtAuthenticationFilter;
 import com.example.UsuarioService.security.JwtUtil;
+import com.example.UsuarioService.service.RefreshTokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,12 @@ public class AuthControllerTest {
 
     @MockBean
     private JwtUtil jwtUtil;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @MockBean
+    private RefreshTokenService refreshTokenService;
 
     @MockBean
     private CustomUserDetailsService userDetailsService;

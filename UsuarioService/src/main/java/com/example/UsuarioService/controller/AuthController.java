@@ -51,6 +51,9 @@ public class AuthController {
 
             // Generar tokens
             final String token = jwtUtil.generateToken(userDetails, usuario.getIdPersona());
+
+            // Eliminar refresh tokens existentes antes de crear uno nuevo
+            refreshTokenService.deleteByUserId(usuario.getIdPersona());
             final RefreshToken refreshToken = refreshTokenService.createRefreshToken(usuario.getIdPersona());
 
             // Obtener región y comuna desde GeografiaService
@@ -126,7 +129,8 @@ public class AuthController {
                             .rol(user.getRol().getNombreRol())
                             .build());
                 })
-                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken, "Refresh token no está en la base de datos."));
+                .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+                        "Refresh token no está en la base de datos."));
     }
 
     private final PersonaRepository personaRepository;

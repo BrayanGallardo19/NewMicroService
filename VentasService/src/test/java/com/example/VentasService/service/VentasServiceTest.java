@@ -1,6 +1,7 @@
 package com.example.VentasService.service;
 
 import com.example.VentasService.client.InventarioClient;
+import com.example.VentasService.dto.DetalleBoletaRequest;
 import com.example.VentasService.model.Boleta;
 import com.example.VentasService.model.DetalleBoleta;
 import com.example.VentasService.repository.BoletaRepository;
@@ -72,21 +73,24 @@ class VentasServiceTest {
         boleta.setIdBoleta(1);
         boleta.setMontoTotal(0);
 
-        DetalleBoleta detalle = new DetalleBoleta();
-        detalle.setIdInventario(10);
-        detalle.setCantidad(2);
-        detalle.setPrecioUnitario(100);
-        detalle.setBoleta(boleta);
+        // mockear getBoletaById para que devuelva la boleta
+        when(boletaRepository.findById(1)).thenReturn(Optional.of(boleta));
+
+        DetalleBoletaRequest request = new DetalleBoletaRequest();
+        request.setInventario(new DetalleBoletaRequest.InventarioIdDto(10));
+        request.setCantidad(2);
+        request.setPrecioUnitario(100);
+        request.setBoleta(new DetalleBoletaRequest.BoletaIdDto(1));
 
         DetalleBoleta savedDetalle = new DetalleBoleta();
         savedDetalle.setSubtotal(200);
 
         when(detalleBoletaRepository.save(any(DetalleBoleta.class))).thenReturn(savedDetalle);
 
-        ventasService.addDetalleBoleta(detalle);
+        ventasService.addDetalleBoleta(request);
 
         verify(inventarioClient).reservarStock(10, 2);
-        verify(detalleBoletaRepository).save(detalle);
+        verify(detalleBoletaRepository).save(any(DetalleBoleta.class));
         verify(boletaRepository).save(boleta); // Updates total
     }
 

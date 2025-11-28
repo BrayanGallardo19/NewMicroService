@@ -25,7 +25,7 @@ public class InventarioClient {
 
         try {
             webClient.post()
-                    .uri("/api/inventario/" + idInventario + "/reservar")
+                    .uri("/api/v1/inventario/" + idInventario + "/reservar")
                     .bodyValue(request)
                     .retrieve()
                     .bodyToMono(Void.class)

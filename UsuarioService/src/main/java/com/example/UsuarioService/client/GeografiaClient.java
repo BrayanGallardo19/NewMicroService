@@ -19,7 +19,7 @@ public class GeografiaClient {
     public ComunaDTO getComunaById(Integer idComuna) {
         try {
             return webClient.get()
-                    .uri("/api/comunas/{id}", idComuna)
+                    .uri("/api/v1/comunas/{id}", idComuna)
                     .retrieve()
                     .bodyToMono(ComunaDTO.class)
                     .block();
@@ -31,7 +31,7 @@ public class GeografiaClient {
     public RegionDTO getRegionById(Integer idRegion) {
         try {
             return webClient.get()
-                    .uri("/api/regiones/{id}", idRegion)
+                    .uri("/api/v1/regiones/{id}", idRegion)
                     .retrieve()
                     .bodyToMono(RegionDTO.class)
                     .block();
