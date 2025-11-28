@@ -3,6 +3,7 @@ package com.example.UsuarioService.controller;
 import com.example.UsuarioService.client.GeografiaClient;
 import com.example.UsuarioService.dto.LoginRequest;
 import com.example.UsuarioService.model.Persona;
+import com.example.UsuarioService.model.RefreshToken;
 import com.example.UsuarioService.model.Rol;
 import com.example.UsuarioService.model.Usuario;
 import com.example.UsuarioService.repository.PersonaRepository;
@@ -100,7 +101,12 @@ public class AuthControllerTest {
         when(userDetailsService.loadUserByUsername("test@example.com")).thenReturn(userDetails);
         when(userDetailsService.getUsuarioByEmail("test@example.com")).thenReturn(usuario);
         when(jwtUtil.generateToken(userDetails, 1)).thenReturn("fake-jwt-token");
-        when(jwtUtil.generateRefreshToken(userDetails)).thenReturn("fake-refresh-token");
+
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setToken("fake-refresh-token");
+        when(refreshTokenService.createRefreshToken(1)).thenReturn(refreshToken);
+
+        // No need to mock deleteByUserId as it returns void and we use default mocks
 
         mockMvc.perform(post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
