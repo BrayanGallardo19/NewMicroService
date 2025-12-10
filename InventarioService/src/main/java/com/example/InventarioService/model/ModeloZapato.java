@@ -37,9 +37,6 @@ public class ModeloZapato {
     @Column(name = "precio_unitario", nullable = false)
     private Integer precioUnitario;
 
-    @Column(name = "imagen_url", length = 500)
-    private String imagenUrl;
-
     @Lob
     @Column(name = "imagen", columnDefinition = "LONGBLOB")
     private byte[] imagen;

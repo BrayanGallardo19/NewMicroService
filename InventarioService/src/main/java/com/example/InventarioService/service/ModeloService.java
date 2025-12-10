@@ -56,9 +56,6 @@ public class ModeloService {
         if (modeloActualizado.getPrecioUnitario() != null) {
             modelo.setPrecioUnitario(modeloActualizado.getPrecioUnitario());
         }
-        if (modeloActualizado.getImagenUrl() != null) {
-            modelo.setImagenUrl(modeloActualizado.getImagenUrl());
-        }
         if (modeloActualizado.getEstado() != null) {
             modelo.setEstado(modeloActualizado.getEstado());
         }
@@ -67,8 +64,16 @@ public class ModeloService {
     }
 
     @Transactional
-    public void deleteModelo(Integer id) {
+    public ModeloZapato updateImagen(Integer id, byte[] imagen) {
         ModeloZapato modelo = getModeloById(id);
-        modeloRepository.delete(modelo);
+        modelo.setImagen(imagen);
+        return modeloRepository.save(modelo);
+    }
+
+    @Transactional
+    public ModeloZapato deleteModelo(Integer id) {
+        ModeloZapato modelo = getModeloById(id);
+        modelo.setEstado("inactivo");
+        return modeloRepository.save(modelo);
     }
 }

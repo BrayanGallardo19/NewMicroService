@@ -130,7 +130,7 @@ public class LoadDatabase {
         private void createOrUpdateModel(ModeloZapatoRepository repository, Marca marca, String nombre,
                         String descripcion, int precio, String imagenFile, String categoria) {
                 ModeloZapato modelo = repository.findByNombreModelo(nombre)
-                                .orElse(new ModeloZapato(null, marca, nombre, descripcion, precio, null, null, "activo",
+                                .orElse(new ModeloZapato(null, marca, nombre, descripcion, precio, null, "activo",
                                                 categoria));
 
                 // Actualizar campos
@@ -145,11 +145,8 @@ public class LoadDatabase {
                         modelo.setImagen(imgData);
                 }
 
-                // Guardar para generar ID si es nuevo
+                // Guardar modelo
                 modelo = repository.save(modelo);
-
-                // Actualizar URL
-                updateImageUrl(repository, modelo);
         }
 
         private byte[] loadImage(String filename) {
@@ -161,11 +158,5 @@ public class LoadDatabase {
                         log.error("Error cargando imagen {}: {}", filename, e.getMessage());
                         return null;
                 }
-        }
-
-        private void updateImageUrl(ModeloZapatoRepository repository, ModeloZapato modelo) {
-                String url = "http://localhost:8082/api/v1/modelos/" + modelo.getIdModelo() + "/imagen";
-                modelo.setImagenUrl(url);
-                repository.save(modelo);
         }
 }
