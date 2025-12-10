@@ -14,6 +14,8 @@ import com.example.UsuarioService.repository.UsuarioRepository;
 import com.example.UsuarioService.security.CustomUserDetailsService;
 import com.example.UsuarioService.security.JwtUtil;
 import com.example.UsuarioService.service.RefreshTokenService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
+@Tag(name = "Autenticación", description = "Endpoints para autenticación y gestión de usuarios")
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -37,6 +40,7 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
+    @Operation(summary = "Iniciar sesión", description = "Autentica un usuario y retorna un token JWT")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             // Autenticar usuario
