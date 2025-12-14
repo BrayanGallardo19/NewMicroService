@@ -15,13 +15,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class ModeloServiceTest {
+class ModeloZapatoServiceTest {
 
     @Mock
     private ModeloZapatoRepository modeloRepository;
 
     @InjectMocks
-    private ModeloService modeloService;
+    private ModeloZapatoService modeloService;
 
     private ModeloZapato modelo;
 
@@ -76,9 +76,13 @@ class ModeloServiceTest {
     @Test
     void deleteModelo() {
         when(modeloRepository.findById(1)).thenReturn(Optional.of(modelo));
-        doNothing().when(modeloRepository).delete(modelo);
+        when(modeloRepository.save(any(ModeloZapato.class))).thenReturn(modelo);
 
-        modeloService.deleteModelo(1);
-        verify(modeloRepository, times(1)).delete(modelo);
+        ModeloZapato deleted = modeloService.deleteModelo(1);
+        
+        assertNotNull(deleted);
+        assertEquals("inactivo", deleted.getEstado());
+        verify(modeloRepository, times(1)).findById(1);
+        verify(modeloRepository, times(1)).save(modelo);
     }
 }

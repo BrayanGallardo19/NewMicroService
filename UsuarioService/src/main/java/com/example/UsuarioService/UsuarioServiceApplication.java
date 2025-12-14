@@ -14,7 +14,7 @@ public class UsuarioServiceApplication {
 	public org.springframework.boot.CommandLineRunner printSwaggerUrl() {
 		return args -> {
 			System.out.println("=================================================");
-			System.out.println("Swagger UI: http://localhost:8081/swagger-ui.html");
+			System.out.println("Swagger UI: http://localhost:8081/swagger-ui/index.html");
 			System.out.println("=================================================");
 		};
 	}

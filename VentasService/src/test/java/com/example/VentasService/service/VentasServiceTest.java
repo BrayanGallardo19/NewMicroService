@@ -1,7 +1,9 @@
 package com.example.VentasService.service;
 
 import com.example.VentasService.client.InventarioClient;
+import com.example.VentasService.dto.BoletaIdDto;
 import com.example.VentasService.dto.DetalleBoletaRequest;
+import com.example.VentasService.dto.InventarioIdDto;
 import com.example.VentasService.model.Boleta;
 import com.example.VentasService.model.DetalleBoleta;
 import com.example.VentasService.repository.BoletaRepository;
@@ -77,10 +79,10 @@ class VentasServiceTest {
         when(boletaRepository.findById(1)).thenReturn(Optional.of(boleta));
 
         DetalleBoletaRequest request = new DetalleBoletaRequest();
-        request.setInventario(new DetalleBoletaRequest.InventarioIdDto(10));
+        request.setInventario(new InventarioIdDto(10));
         request.setCantidad(2);
         request.setPrecioUnitario(100);
-        request.setBoleta(new DetalleBoletaRequest.BoletaIdDto(1));
+        request.setBoleta(new BoletaIdDto(1));
 
         DetalleBoleta savedDetalle = new DetalleBoleta();
         savedDetalle.setSubtotal(200);

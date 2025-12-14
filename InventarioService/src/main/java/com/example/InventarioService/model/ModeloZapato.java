@@ -20,18 +20,18 @@ public class ModeloZapato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_modelo")
-    @Schema(description = "ID del modelo", example = "1")
+    @Schema(description = "ID único del modelo", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Integer idModelo;
 
     @NotNull(message = "La marca es obligatoria")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_marca", nullable = false)
-    @Schema(description = "Marca del zapato")
+    @Schema(description = "Marca del zapato", requiredMode = Schema.RequiredMode.REQUIRED)
     private Marca marca;
 
     @NotBlank(message = "El nombre del modelo es obligatorio")
     @Column(name = "nombre_modelo", nullable = false, length = 150)
-    @Schema(description = "Nombre del modelo", example = "Air Max 90")
+    @Schema(description = "Nombre del modelo", example = "Air Max 90", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nombreModelo;
 
     @Column(name = "descripcion", columnDefinition = "TEXT")
@@ -41,7 +41,7 @@ public class ModeloZapato {
     @NotNull(message = "El precio unitario es obligatorio")
     @Min(value = 0, message = "El precio debe ser mayor o igual a 0")
     @Column(name = "precio_unitario", nullable = false)
-    @Schema(description = "Precio en pesos chilenos", example = "89990")
+    @Schema(description = "Precio en pesos chilenos", example = "89990", requiredMode = Schema.RequiredMode.REQUIRED, minimum = "0")
     private Integer precioUnitario;
 
     @Lob

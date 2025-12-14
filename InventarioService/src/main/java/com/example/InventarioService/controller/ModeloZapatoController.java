@@ -2,7 +2,7 @@ package com.example.InventarioService.controller;
 
 import com.example.InventarioService.model.ModeloZapato;
 import com.example.InventarioService.repository.ModeloZapatoRepository;
-import com.example.InventarioService.service.ModeloService;
+import com.example.InventarioService.service.ModeloZapatoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +22,7 @@ import java.util.List;
 @Tag(name = "Modelos de Zapatos", description = "Gestión de modelos de zapatos")
 public class ModeloZapatoController {
 
-    private final ModeloService modeloService;
+    private final ModeloZapatoService modeloService;
     private final ModeloZapatoRepository modeloRepository;
 
     @GetMapping

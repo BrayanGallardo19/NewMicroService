@@ -1,5 +1,6 @@
 package com.example.UsuarioService.controller;
 
+import com.example.UsuarioService.client.GeografiaClient;
 import com.example.UsuarioService.dto.LoginRequest;
 import com.example.UsuarioService.dto.LoginResponse;
 import com.example.UsuarioService.dto.LogoutRequest;
@@ -36,7 +37,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
-    private final com.example.UsuarioService.client.GeografiaClient geografiaClient;
+    private final GeografiaClient geografiaClient;
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
